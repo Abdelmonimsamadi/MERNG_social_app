@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 
-const likeSchema = mongoose.Schema(
-    {
-        // FIXME: use list of id's instead and use $addSet
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true,
-        },
-        username: { type: String, required: true },
-        createdAt: { type: String, required: true }
-    }
-)
+// const likeSchema = mongoose.Schema(
+//     {
+//         // FIXME: use list of id's instead and use $addSet
+//         userId: {
+//             type: mongoose.Schema.Types.ObjectId,
+//             ref: 'User',
+//             required: true,
+//         },
+//         username: { type: String, required: true },
+//         createdAt: { type: String, required: true }
+//     }
+// )
 
 const postSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -30,7 +30,9 @@ const postSchema = new mongoose.Schema({
             createdAt: { type: String, required: true }
         }
     ],
-    likes: [likeSchema],
+    likes: {
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

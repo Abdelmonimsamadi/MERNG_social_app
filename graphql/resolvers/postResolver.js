@@ -42,23 +42,19 @@ export default {
             const user = checkAuth(context)
             const post = await Post.findById(id)
             if (!post) throw new Error('this post does not exist !')
-            const postLiked = post.likes.find(like => {
-                return (like.userId.toString() === user.id.toString())
+            const postLiked = post.likes.find(userId => {
+                return (userId.toString() === user.id.toString())
             })
 
             const pull = {
                 $pull: {
-                    likes: { userId: user.id }
+                    likes: user.id,
                 }
             }
 
             const push = {
                 $addToSet: {
-                    likes: {
-                        userId: user.id,
-                        username: user.name,
-                        createdAt: new Date().toISOString()
-                    }
+                    likes: user.id,
                 }
             }
 

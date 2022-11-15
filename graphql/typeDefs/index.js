@@ -14,19 +14,13 @@ const typeDefs = `#graphql
     body: String!
     createdAt: String!
   }
-  type Like{
-    id: ID!
-    userId: String!
-    username: String!
-    createdAt: String!
-  }
   type Post{
     id: ID!
     title: String!
     body: String!
     name: String!
     comments: [Comment]
-    likes: [Like]
+    likes: [String]
     createdAt: String!
     updatedAt: String!
   }
@@ -53,7 +47,7 @@ const typeDefs = `#graphql
     createPost(post: inputPost): Post!
     deletePost(id: ID!): Boolean!
     updatePost(id:ID!, post: inputPost): Post!
-    likePost(id: ID!): Post!
+    likePost(id: ID!): Post
     addComment(postId:ID!,body: String!): [Comment]
   }
 `;
