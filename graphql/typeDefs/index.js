@@ -18,6 +18,7 @@ const typeDefs = `#graphql
     id: ID!
     title: String!
     body: String!
+    user: String!
     name: String!
     comments: [Comment]
     likes: [String]

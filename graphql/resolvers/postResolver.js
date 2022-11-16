@@ -7,7 +7,7 @@ import { ApolloServerErrorCode } from "@apollo/server/errors"
 
 export default {
     Query: {
-        posts: async () => await Post.find(),
+        posts: async () => await Post.find().sort({ createdAt: -1 }),
         post: async (_, { id }) => await Post.findById(id)
     },
     Mutation: {
