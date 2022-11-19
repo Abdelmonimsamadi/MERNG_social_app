@@ -44,15 +44,6 @@ const SinglePost = () => {
         },
       });
     },
-    // optimisticResponse: {
-    //   addComment: {
-    //     id: "temp-id",
-    //     __typename: "Comment",
-    //     body: input,
-    //     username: context.user.name,
-    //     createdAt: new Date().toISOString(),
-    //   },
-    // },
   });
 
   if (post) {
@@ -83,7 +74,7 @@ const SinglePost = () => {
       });
     },
     optimisticResponse: {
-      // deletePost: true,
+      deletePost: true,
       // __typename: "Post",
     },
   });
@@ -93,7 +84,21 @@ const SinglePost = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    addComment();
+    addComment({
+      optimisticResponse: {
+        addComment: [
+          {
+            __typename: "Comment",
+            id: "temp_id",
+            userId: context.user?.id,
+            username: context.user?.name,
+            body: input,
+            createdAt: new Date().toISOString(),
+          },
+          ...post.comments,
+        ],
+      },
+    });
     setInput("");
   };
   const handleChange = (e) => {
@@ -164,7 +169,7 @@ const SinglePost = () => {
           <div>No comments</div>
         ) : (
           sortedComments.map((comment) => (
-            <Comment key={comment.id} postId={id} comment={comment} />
+            <Comment key={comment.id} comment={comment} />
           ))
         )}
       </>

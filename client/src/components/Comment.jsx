@@ -1,7 +1,7 @@
 import moment from "moment";
 import Card from "react-bootstrap/Card";
 
-function Comment({ postId, comment }) {
+function Comment({ comment }) {
   return (
     <Card className="mb-3">
       <Card.Body>

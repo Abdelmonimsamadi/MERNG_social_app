@@ -3,8 +3,10 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { createPostMutation, postsQuery } from "../utils/grahql";
+import { useNavigate } from "react-router-dom";
 
 function PostInput({ user }) {
+  const navigate = useNavigate();
   const initialInput = {
     title: "",
     body: "",
@@ -30,24 +32,6 @@ function PostInput({ user }) {
         });
       }
     },
-    // update(cache, { data: { createPost } }) {
-    //   cache.modify({
-    //     fields: {
-    //       posts(existingPosts = []) {
-    //         const newPost = cache.writeFragment({
-    //           data: createPost,
-    //           fragment: gql`
-    //             fragment Newpost on posts {
-    //               id
-    //               type
-    //             }
-    //           `,
-    //         });
-    //         return [...existingPosts, newPost];
-    //       },
-    //     },
-    //   });
-    // },
     optimisticResponse: {
       createPost: {
         __typename: "Post",
@@ -61,6 +45,13 @@ function PostInput({ user }) {
         createdAt: new Date().getTime(),
         updatedAt: new Date().getTime(),
       },
+    },
+    onError(err) {
+      // TODO add on jwt expired go to login page with session expired error modal
+      console.log(err);
+      if (err === "jwt Expired") {
+        navigate("/login");
+      }
     },
   });
   const handleSubmit = async (e) => {
