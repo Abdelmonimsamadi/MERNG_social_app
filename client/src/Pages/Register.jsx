@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Button, Form } from "semantic-ui-react";
+import { Button, Form,Alert } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth";
@@ -58,52 +58,60 @@ const Register = () => {
   };
 
   return (
-    <div className="form-container">
+    <div className="w-50 mx-auto mt-{150px}">
       <Form
         onSubmit={handleSubmit(onsubmit)}
         style={{
-          width: "400px",
-          marginLeft: "auto",
-          marginRight: "auto",
+          // width: "400px",
           marginTop: "150px",
         }}
       >
-        <Form.Field error={errors.name ? true : false}>
-          <label>Name</label>
-          <input placeholder="Name" {...register("name")} />
-        </Form.Field>
-        <Form.Field error={errors.email ? true : false}>
-          <label>Email</label>
-          <input placeholder="Email" {...register("email")} />
-        </Form.Field>
-        <Form.Field error={errors.password ? true : false}>
-          <label>Password</label>
-          <input
+        <Form.Group controlId="name">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            placeholder="Name"
+            {...register("name")}
+            isInvalid={!!errors.name}
+          />
+        </Form.Group>
+        <Form.Group controlId="email" className="my-2">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            placeholder="Email"
+            {...register("email")}
+            isInvalid={!!errors.email}
+          />
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             type="password"
             placeholder="Password"
             {...register("password")}
+            isInvalid={!!errors.password}
           />
-        </Form.Field>
-        <Form.Field error={errors.confirmPassword ? true : false}>
-          <label>Confirm password</label>
-          <input
+        </Form.Group>
+        <Form.Group controlId="confirmPassword" className="my-2">
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
             type="password"
             placeholder="Confirm password"
             {...register("confirmPassword")}
+            isInvalid={!!errors.confirmPassword}
           />
-        </Form.Field>
-        <Button type="submit" loading={loading} disabled={loading}>
-          Register
+        </Form.Group>
+        <Button type="submit" disabled={loading} className="my-3">
+          {loading ? "Loading..." : "Register"}
         </Button>
       </Form>
       {Object.keys(errors).length > 0 && (
-        <div className="ui error message">
-          <ul>
+        <Alert variant="danger">
+          <ul className="mb-0">
             {Object.values(errors).map((input, i) => (
               <li key={i}>{input.message}</li>
             ))}
           </ul>
-        </div>
+        </Alert>
       )}
     </div>
   );
