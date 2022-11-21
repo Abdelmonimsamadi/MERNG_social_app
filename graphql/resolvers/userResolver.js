@@ -16,8 +16,7 @@ export default {
             }
             const existingUser = await User.findOne({ email: email })
             if (existingUser) {
-                errors.generale = "User with this email Exist !"
-                throw new GraphQLError('User with this email Exist !', { extensions: { code: ApolloServerErrorCode.BAD_USER_INPUT, errors } })
+                throw new GraphQLError('User with this email Exist !', { extensions: { code: ApolloServerErrorCode.BAD_USER_INPUT, argumentName: "email" } })
             }
             const userRegistered = await User.create({ name, email, password, confirmPassword })
             const token = await generateToken({ name: userRegistered.name, email: userRegistered.email, id: userRegistered._id })
@@ -31,13 +30,11 @@ export default {
             }
             const user = await User.findOne({ email })
             if (!user) {
-                errors.generale = "No existing user with this email !"
-                throw new GraphQLError('No existing user with this email !', { extensions: { code: ApolloServerErrorCode.BAD_USER_INPUT, errors } })
+                throw new GraphQLError('No existing user with this email !', { extensions: { code: ApolloServerErrorCode.BAD_USER_INPUT, argumentName: "email" } })
             }
             const passwordIsMatching = await user.validatePassword(password)
             if (!passwordIsMatching) {
-                errors.generale = "password does not match"
-                throw new GraphQLError('password does not match', { extensions: { code: ApolloServerErrorCode.BAD_USER_INPUT, errors } })
+                throw new GraphQLError('password does not match', { extensions: { code: ApolloServerErrorCode.BAD_USER_INPUT, argumentName: "password" } })
             }
             const token = await generateToken({ email, name: user.name, id: user._id })
             user.token = token

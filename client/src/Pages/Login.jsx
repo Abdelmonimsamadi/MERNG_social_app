@@ -20,7 +20,8 @@ const Login = () => {
   const {
     register: registerRHF,
     handleSubmit: handleSubmitRHF,
-    formState: { errors: errorsRHF },
+    formState: { errors },
+    setError,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -32,15 +33,17 @@ const Login = () => {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [errors, setErrors] = useState({});
-
   const [login, { loading }] = useMutation(loginMutation, {
     update(_, { data: { loginUser } }) {
       authContext.loginOrRegister(loginUser);
       navigate("/");
     },
     onError(err) {
-      setErrors(err.graphQLErrors[0].extensions.errors || {});
+      const graphqlError = err.graphQLErrors[0];
+      setError(graphqlError.extensions.argumentName, {
+        type: "customType",
+        message: graphqlError.message,
+      });
     },
   });
 
@@ -77,20 +80,11 @@ const Login = () => {
           Login
         </Button>
       </Form>
-      {Object.keys(errorsRHF).length > 0 && (
-        <div className="ui error message">
-          <ul>
-            {Object.values(errorsRHF).map((input, i) => (
-              <li key={i}>{input.message}</li>
-            ))}
-          </ul>
-        </div>
-      )}
       {Object.keys(errors).length > 0 && (
         <div className="ui error message">
           <ul>
-            {Object.values(errors).map((value, i) => (
-              <li key={i}>{value}</li>
+            {Object.values(errors).map((input, i) => (
+              <li key={i}>{input.message}</li>
             ))}
           </ul>
         </div>
