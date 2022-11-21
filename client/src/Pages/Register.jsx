@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { Button, Form } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
@@ -22,9 +22,10 @@ const schema = yup
 
 const Register = () => {
   const {
-    register: registerRHF,
-    handleSubmit: handleSubmitRHF,
-    formState: { errors: errorsRHF },
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -38,26 +39,28 @@ const Register = () => {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [errors, setErrors] = useState({});
-
-  const [register, { loading }] = useMutation(registerMutation, {
+  const [registerUser, { loading }] = useMutation(registerMutation, {
     update(_, { data: { registerUser } }) {
       authContext.loginOrRegister(registerUser);
       navigate("/");
     },
     onError(err) {
-      setErrors(err.graphQLErrors[0].extensions.errors || {});
+      const graphqlError = err.graphQLErrors[0];
+      setError(graphqlError.extensions.argumentName, {
+        type: "customType",
+        message: graphqlError.message,
+      });
     },
   });
 
-  const handleSubmit = async (data) => {
-    await register({ variables: { user: data } });
+  const onsubmit = async (data) => {
+    await registerUser({ variables: { user: data } });
   };
 
   return (
     <div className="form-container">
       <Form
-        onSubmit={handleSubmitRHF(handleSubmit)}
+        onSubmit={handleSubmit(onsubmit)}
         style={{
           width: "400px",
           marginLeft: "auto",
@@ -67,18 +70,18 @@ const Register = () => {
       >
         <Form.Field error={errors.name ? true : false}>
           <label>Name</label>
-          <input placeholder="Name" {...registerRHF("name")} />
+          <input placeholder="Name" {...register("name")} />
         </Form.Field>
         <Form.Field error={errors.email ? true : false}>
           <label>Email</label>
-          <input placeholder="Email" {...registerRHF("email")} />
+          <input placeholder="Email" {...register("email")} />
         </Form.Field>
         <Form.Field error={errors.password ? true : false}>
           <label>Password</label>
           <input
             type="password"
             placeholder="Password"
-            {...registerRHF("password")}
+            {...register("password")}
           />
         </Form.Field>
         <Form.Field error={errors.confirmPassword ? true : false}>
@@ -86,27 +89,18 @@ const Register = () => {
           <input
             type="password"
             placeholder="Confirm password"
-            {...registerRHF("confirmPassword")}
+            {...register("confirmPassword")}
           />
         </Form.Field>
         <Button type="submit" loading={loading} disabled={loading}>
           Register
         </Button>
       </Form>
-      {Object.keys(errorsRHF).length > 0 && (
-        <div className="ui error message">
-          <ul>
-            {Object.values(errorsRHF).map((input, i) => (
-              <li key={i}>{input.message}</li>
-            ))}
-          </ul>
-        </div>
-      )}
       {Object.keys(errors).length > 0 && (
         <div className="ui error message">
           <ul>
-            {Object.values(errors).map((value, i) => (
-              <li key={i}>{value}</li>
+            {Object.values(errors).map((input, i) => (
+              <li key={i}>{input.message}</li>
             ))}
           </ul>
         </div>

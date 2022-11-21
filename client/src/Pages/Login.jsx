@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form } from "semantic-ui-react";
 import { AuthContext } from "../context/auth";
@@ -18,8 +18,8 @@ const schema = yup
 
 const Login = () => {
   const {
-    register: registerRHF,
-    handleSubmit: handleSubmitRHF,
+    register,
+    handleSubmit,
     formState: { errors },
     setError,
   } = useForm({
@@ -47,7 +47,7 @@ const Login = () => {
     },
   });
 
-  const handleSubmit = async (data) => {
+  const onSubmit = async (data) => {
     await login({
       variables: data,
     });
@@ -56,7 +56,7 @@ const Login = () => {
   return (
     <div className="form-container">
       <Form
-        onSubmit={handleSubmitRHF(handleSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
         style={{
           width: "400px",
           marginLeft: "auto",
@@ -66,14 +66,14 @@ const Login = () => {
       >
         <Form.Field error={errors.email ? true : false}>
           <label>Email</label>
-          <input placeholder="Email" {...registerRHF("email")} />
+          <input placeholder="Email" {...register("email")} />
         </Form.Field>
         <Form.Field error={errors.password ? true : false}>
           <label>Password</label>
           <input
             type="password"
             placeholder="Password"
-            {...registerRHF("password")}
+            {...register("password")}
           />
         </Form.Field>
         <Button type="submit" loading={loading} disabled={loading}>
