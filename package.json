@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node --experimental-specifier-resolution=node index.js",
     "dev": "nodemon --experimental-specifier-resolution=node index.js",
-    "concurrently": "concurrently \"npm run dev\" \"npm --prefix ./client run dev\""
+    "concurrently": "concurrently -k \"npm run dev\" \"npm --prefix ./client run dev\""
   },
   "keywords": [],
   "author": "",
