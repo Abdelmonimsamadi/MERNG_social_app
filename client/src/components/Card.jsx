@@ -17,9 +17,6 @@ const CardPost = ({ post }) => {
     ? post.likes.filter((id) => id !== user.id)
     : [...post.likes, user?.id];
   const [like] = useMutation(likeMutation, {
-    onError() {
-      navigate("/login");
-    },
     optimisticResponse: {
       likePost: {
         ...post,
@@ -62,11 +59,12 @@ const CardPost = ({ post }) => {
         <Card.Text>{post.body}</Card.Text>
         <Stack direction="horizontal" className="gap-1">
           <Button
-            onClick={() =>
+            onClick={() => {
+              if (!user) return navigate("/login");
               like({
                 variables: { id: post.id },
-              })
-            }
+              });
+            }}
             variant="dark"
           >
             Like <Badge bg="secondary">{post.likes.length}</Badge>
@@ -75,7 +73,13 @@ const CardPost = ({ post }) => {
             Comments <Badge bg="secondary">{post.comments.length}</Badge>
           </Button>
           {isPostOwner && (
-            <Button variant="danger" onClick={deletePost}>
+            <Button
+              variant="danger"
+              onClick={() => {
+                if (!user) return navigate("login");
+                deletePost();
+              }}
+            >
               Delete
             </Button>
           )}

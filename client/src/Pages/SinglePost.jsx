@@ -28,7 +28,6 @@ const SinglePost = () => {
   const [addComment] = useMutation(addCommentMutation, {
     variables: { postId: id, body: input },
     // refetchQueries: ["POST"],
-    // TODO: add optimistic response or/and update cache
     update(cache, { data: { addComment } }) {
       const existingPost = cache.readQuery({
         query: postQuery,
@@ -80,10 +79,12 @@ const SinglePost = () => {
     },
   });
   const handleClickDelete = () => {
+    if (!context.user) return navigate("login");
     deletePost();
     navigate("/");
   };
   const handleSubmit = (e) => {
+    if (!context.user) return navigate("login");
     e.preventDefault();
     addComment({
       optimisticResponse: {
@@ -129,11 +130,12 @@ const SinglePost = () => {
             <Card.Text>{post.body}</Card.Text>
             <Stack direction="horizontal" className="gap-1">
               <Button
-                onClick={() =>
+                onClick={() => {
+                  if (!context.user) return navigate("login");
                   like({
                     variables: { id: post.id },
-                  })
-                }
+                  });
+                }}
                 variant="dark"
               >
                 Like <Badge bg="secondary">{post.likes.length}</Badge>

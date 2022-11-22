@@ -6,6 +6,7 @@ import { createPostMutation, postsQuery } from "../utils/grahql";
 import { useNavigate } from "react-router-dom";
 
 function PostInput({ user }) {
+  // TODO add react hook form
   const navigate = useNavigate();
   const initialInput = {
     title: "",
@@ -46,16 +47,10 @@ function PostInput({ user }) {
         updatedAt: new Date().getTime(),
       },
     },
-    onError(err) {
-      // TODO add on jwt expired go to login page with session expired error modal
-      console.log(err);
-      if (err === "jwt Expired") {
-        navigate("/login");
-      }
-    },
   });
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!user) return navigate("/login");
     await createPost();
     setValues(initialInput);
   };

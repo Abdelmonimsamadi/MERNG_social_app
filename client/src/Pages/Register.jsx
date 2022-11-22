@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Button, Form,Alert } from "react-bootstrap";
+import { Button, Form, Alert } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth";
@@ -17,6 +17,7 @@ const schema = yup
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("password"), null], "Passwords must match"),
+    // TODO remove confirmPassword from error on change
   })
   .required();
 
