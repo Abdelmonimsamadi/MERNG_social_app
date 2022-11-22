@@ -89,7 +89,23 @@ export const postQuery = gql`
 
 export const deletePostMutation = gql`
 mutation DeletePost($deletePostId: ID!) {
-  deletePost(id: $deletePostId)
+  deletePost(id: $deletePostId){
+    title
+    body
+    likes 
+    comments {
+      body
+      createdAt
+      id
+      userId
+      username
+    }
+    name
+    user
+    createdAt
+    id
+    updatedAt
+  }
 }
 `
 

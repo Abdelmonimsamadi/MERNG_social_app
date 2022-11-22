@@ -26,7 +26,7 @@ export default {
             const equal = user.id.toString() === post.user.toString()
             if (!equal) throw new Error('Not authorized to delete this post')
             await post.delete()
-            return true
+            return post
         },
         async updatePost(_, { id, post }, context) {
             const user = checkAuth(context)

@@ -46,7 +46,7 @@ const typeDefs = `#graphql
     updateUser(id: ID!, name: String!, password: String, email:String!): User!
     deleteUser(id: ID!): User!
     createPost(post: inputPost): Post!
-    deletePost(id: ID!): Boolean!
+    deletePost(id: ID!): Post!
     updatePost(id:ID!, post: inputPost): Post!
     likePost(id: ID!): Post
     addComment(postId:ID!,body: String!): [Comment]

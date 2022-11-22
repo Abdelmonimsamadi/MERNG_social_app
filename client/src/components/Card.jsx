@@ -31,22 +31,25 @@ const CardPost = ({ post }) => {
     variables: { deletePostId: post.id },
     // refetchQueries: ["POSTS"],
     update: (cache, { data }) => {
-      const isDeleted = data?.deletePost;
+      const deletedPost = data?.deletePost;
       const existingPosts = cache.readQuery({
         query: postsQuery,
-      }).posts;
-      if (existingPosts && isDeleted) {
+      });
+      if (existingPosts && deletedPost) {
         cache.writeQuery({
           query: postsQuery,
           data: {
-            posts: existingPosts.filter((item) => item.id !== post.id),
+            posts: existingPosts.posts.filter(
+              (item) => item.id !== deletedPost.id
+            ),
           },
         });
       }
     },
     optimisticResponse: {
-      deletePost: true,
-      // __typename: "Post",
+      deletePost: {
+        ...post,
+      },
     },
   });
   return (

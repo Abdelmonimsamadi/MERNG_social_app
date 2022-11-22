@@ -74,8 +74,9 @@ const SinglePost = () => {
       });
     },
     optimisticResponse: {
-      deletePost: true,
-      // __typename: "Post",
+      deletePost: {
+        ...post,
+      },
     },
   });
   const handleClickDelete = () => {
@@ -89,7 +90,7 @@ const SinglePost = () => {
         addComment: [
           {
             __typename: "Comment",
-            id: "temp_id",
+            id: new Date().getTime(),
             userId: context.user?.id,
             username: context.user?.name,
             body: input,
