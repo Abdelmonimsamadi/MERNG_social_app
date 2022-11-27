@@ -1,4 +1,6 @@
 const typeDefs = `#graphql
+scalar Upload
+
   type User {
     id: ID!
     name: String!
@@ -14,6 +16,10 @@ const typeDefs = `#graphql
     body: String!
     createdAt: String!
   }
+  type Image {
+    public_id: String!
+    secure_url: String!
+  }
   type Post{
     id: ID!
     title: String!
@@ -24,10 +30,12 @@ const typeDefs = `#graphql
     likes: [String]
     createdAt: String!
     updatedAt: String!
+    image: Image!
   }
   input inputPost{
     title: String!
     body: String!
+    file:Upload
   }
   input inputUser {
     name: String!
@@ -50,6 +58,7 @@ const typeDefs = `#graphql
     updatePost(id:ID!, post: inputPost): Post!
     likePost(id: ID!): Post
     addComment(postId:ID!,body: String!): [Comment]
+    # addFile(file: Upload):Boolean
   }
 `;
 

@@ -39,6 +39,9 @@ mutation CreatePost($post: inputPost) {
     createdAt
     id
     updatedAt
+    image {
+      secure_url
+    }
   }
 }
 `
@@ -61,6 +64,9 @@ export const postsQuery = gql`
       updatedAt
       createdAt
       id
+      image {
+      secure_url
+    }
     }
   }
 `

@@ -32,7 +32,7 @@ const SinglePost = () => {
       const existingPost = cache.readQuery({
         query: postQuery,
         variables: { postId: id },
-      }).post;
+      });
       cache.writeQuery({
         query: postQuery,
         data: {

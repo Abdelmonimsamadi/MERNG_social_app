@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react";
-// import { Menu } from "semantic-ui-react";
+import React, { useContext } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -11,7 +10,7 @@ export default function () {
   const { user, logout } = useContext(AuthContext);
   const handleItemClick = () => {};
   return (
-    <Navbar bg="dark" variant="dark" expand="md">
+    <Navbar bg="dark" variant="dark" expand="md" className="mb-4">
       <Container>
         <Navbar.Brand as={Link} to="/" onClick={handleItemClick}>
           Home

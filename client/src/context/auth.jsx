@@ -1,7 +1,5 @@
 import { createContext, useReducer } from "react";
 import jwtDecode from "jwt-decode";
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const initialState = {
   user: null,
@@ -41,6 +39,7 @@ const userReducer = (state, action) => {
 
 export function AuthProvider(props) {
   const [state, dispatch] = useReducer(userReducer, initialState);
+  // TODO when session expires redirect to login page
 
   function loginOrRegister(userData) {
     localStorage.setItem("jwtToken", userData.token);

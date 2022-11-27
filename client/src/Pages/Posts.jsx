@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { useQuery } from "@apollo/client";
-import Card from "../components/Card";
+import Card from "../components/Post";
 import PostInput from "../components/PostInput";
 import { AuthContext } from "../context/auth";
 import { postsQuery } from "../utils/grahql";

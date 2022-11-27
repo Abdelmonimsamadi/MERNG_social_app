@@ -3,7 +3,7 @@ import User from "../../models/user"
 import { checkAuth } from "../../utils/auth";
 import { GraphQLError } from "graphql"
 import { ApolloServerErrorCode } from "@apollo/server/errors"
-
+import { v2 as cloudinary } from 'cloudinary'
 
 export default {
     Query: {
@@ -12,12 +12,31 @@ export default {
     },
     Mutation: {
         createPost: async (_, { post }, context) => {
-            const user = checkAuth(context)
-            const retrieveUser = await User.findOne({ email: user.email })
-            post.user = retrieveUser._id
-            post.name = retrieveUser.name
-            const createdPost = await Post.create(post)
-            return createdPost
+            try {
+                const stream = await post.file.file.createReadStream()
+                const upload_stream = (stream) => {
+                    return new Promise((resolve, reject) => {
+                        const upload = cloudinary.uploader.upload_stream({ folder: 'graphql' }
+                            , function (err, result) {
+                                if (err) { return reject(err) }
+                                return resolve(result)
+                            }
+                        )
+
+                        stream.pipe(upload)
+                    })
+                }
+                const { public_id, secure_url } = await upload_stream(stream)
+                const user = checkAuth(context)
+                const retrieveUser = await User.findOne({ email: user.email })
+                post.user = retrieveUser._id
+                post.name = retrieveUser.name
+                post.image = { public_id, secure_url }
+                const createdPost = await Post.create(post)
+                return createdPost
+            } catch (error) {
+                console.log(error)
+            }
         },
         async deletePost(_, { id }, context) {
             const user = checkAuth(context)
@@ -25,6 +44,7 @@ export default {
             if (!post) throw new Error('This post does not exist')
             const equal = user.id.toString() === post.user.toString()
             if (!equal) throw new Error('Not authorized to delete this post')
+            cloudinary.uploader.destroy(post.image.public_id)
             await post.delete()
             return post
         },

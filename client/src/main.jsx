@@ -6,10 +6,11 @@ import {
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
+  ApolloLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { createUploadLink } from "apollo-upload-client";
 import { AuthProvider } from "./context/auth";
-import "semantic-ui-css/semantic.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const uri = import.meta.env.PROD
@@ -30,8 +31,18 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const link = ApolloLink.from([
+  authLink,
+  createUploadLink({
+    uri,
+    headers: { "Apollo-Require-Preflight": "true" },
+  }),
+  // httpLink,
+]);
+
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  // link: authLink.concat(link),
+  link,
   cache: new InMemoryCache(),
 });
 
