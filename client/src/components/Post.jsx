@@ -61,7 +61,9 @@ const Post = ({ post }) => {
         style={{
           objectFit: "cover",
           aspectRatio: "1/1",
+          cursor: "pointer",
         }}
+        onClick={() => navigate(`post/${post.id}`)}
       />
       <Card.Body>
         <Card.Title>{post.title}</Card.Title>
