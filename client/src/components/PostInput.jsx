@@ -41,6 +41,7 @@ function PostInput({ user }) {
       createPost: {
         __typename: "Post",
         id: "temp_id",
+        // FIXME problem with the title and body values
         title: getValues("title"),
         body: getValues("body"),
         user: user.id,

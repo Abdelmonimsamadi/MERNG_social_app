@@ -89,6 +89,9 @@ export const postQuery = gql`
       body
       createdAt
     }
+    image {
+      secure_url
+    }
   }
 }
 `

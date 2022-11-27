@@ -122,6 +122,14 @@ const SinglePost = () => {
     post && (
       <>
         <Card>
+          <Card.Img
+            variant="top"
+            src={post.image.secure_url}
+            style={{
+              objectFit: "cover",
+              aspectRatio: "2/1",
+            }}
+          />
           <Card.Body>
             <Card.Title>{post.title}</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">
