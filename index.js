@@ -21,7 +21,7 @@ import typeDefs from './graphql/typeDefs/index.js';
 import resolvers from './graphql/resolvers';
 
 const app = express()
-app.options("*", cors())
+
 const httpServer = http.createServer(app)
 const server = new ApolloServer({
     typeDefs,
