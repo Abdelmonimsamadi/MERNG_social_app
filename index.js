@@ -21,6 +21,7 @@ import typeDefs from './graphql/typeDefs/index.js';
 import resolvers from './graphql/resolvers';
 
 const app = express()
+app.options("*", cors())
 const httpServer = http.createServer(app)
 const server = new ApolloServer({
     typeDefs,
@@ -36,7 +37,7 @@ const start = async () => {
         await connectDB()
         app.use('/',
             graphqlUploadExpress(),
-            cors({ origin: ["https://merng-apollo.netlify.app/", "http://localhost:4173"], credentials: true }),
+            cors(),
             express.json(),
             expressMiddleware(server, {
                 context: ({ req }) => ({ req })
