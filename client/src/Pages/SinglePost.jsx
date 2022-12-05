@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import moment from "moment";
 import React, { useState } from "react";
 import { useContext } from "react";
-import { Badge, Button, Card, Form, Stack } from "react-bootstrap";
+import { Badge, Button, Card, Stack } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Comment from "../components/Comment";
 import {
@@ -13,6 +13,7 @@ import {
   postsQuery,
 } from "../utils/grahql";
 import { AuthContext } from "../context/auth";
+import { useForm } from "react-hook-form";
 
 const SinglePost = () => {
   const navigate = useNavigate();
@@ -26,23 +27,22 @@ const SinglePost = () => {
   });
   const post = data?.post;
   const [addComment] = useMutation(addCommentMutation, {
-    variables: { postId: id, body: input },
-    // refetchQueries: ["POST"],
-    update(cache, { data: { addComment } }) {
-      const existingPost = cache.readQuery({
-        query: postQuery,
-        variables: { postId: id },
-      });
-      cache.writeQuery({
-        query: postQuery,
-        data: {
-          post: {
-            ...existingPost,
-            comments: addComment,
-          },
-        },
-      });
-    },
+    refetchQueries: ["POST"],
+    // update(cache, { data: { addComment } }) {
+    //   const existingPost = cache.readQuery({
+    //     query: postQuery,
+    //     variables: { postId: id },
+    //   });
+    //   cache.writeQuery({
+    //     query: postQuery,
+    //     data: {
+    //       post: {
+    //         ...existingPost,
+    //         comments: addComment,
+    //       },
+    //     },
+    //   });
+    // },
   });
 
   if (post) {
@@ -83,33 +83,40 @@ const SinglePost = () => {
     deletePost();
     navigate("/");
   };
-  const handleSubmit = (e) => {
+
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm({ defaultValues: { body: "" } });
+
+  const onSubmit = (data) => {
     if (!context.user) return navigate("login");
-    e.preventDefault();
     addComment({
-      optimisticResponse: {
-        addComment: [
-          {
-            __typename: "Comment",
-            id: new Date().getTime(),
-            userId: context.user?.id,
-            username: context.user?.name,
-            body: input,
-            createdAt: new Date().toISOString(),
-          },
-          ...post.comments,
-        ],
-      },
+      variables: { postId: id, body: data.commentInput },
+      // optimisticResponse: {
+      //   addComment: [
+      //     {
+      //       __typename: "Comment",
+      //       id: new Date().getTime(),
+      //       userId: context.user?.id,
+      //       username: context.user?.name,
+      //       body: getValues("commentInput"),
+      //       createdAt: new Date().toISOString(),
+      //     },
+      //     ...post.comments,
+      //   ],
+      // },
     });
     setInput("");
   };
-  const handleChange = (e) => {
-    setInput(e.target.value);
-  };
+
   const isPostOwner = context?.user?.id === post?.user;
 
   const dateToNumber = (date) => new Date(date).getTime();
 
+  // FIXME get sorted comment from database directly & refactor comments query
   const sortComments = (array) => {
     return array.sort((x, y) => {
       x = dateToNumber(x.createdAt);
@@ -157,7 +164,7 @@ const SinglePost = () => {
           </Card.Body>
         </Card>
         <h3 className="my-3">Comments</h3>
-        {context.user ? (
+        {/* {context.user ? (
           <Form onSubmit={handleSubmit} className="mb-4">
             <Form.Group controlId="comment">
               <Form.Label>Add comment</Form.Label>
@@ -174,15 +181,79 @@ const SinglePost = () => {
           </Form>
         ) : (
           <div className="my-4">Login to write comment !</div>
-        )}
+        )} */}
 
-        {post.comments.length === 0 ? (
+        {/* {post.comments.length === 0 ? (
           <div>No comments</div>
         ) : (
           sortedComments.map((comment) => (
             <Comment key={comment.id} comment={comment} />
           ))
-        )}
+        )} */}
+
+        <section>
+          <div>
+            <div className="row d-flex justify-content-center">
+              <div className="col-md-12 col-lg-10 col-xl-8">
+                <div className="vstack gap-2">
+                  {sortedComments.map((comment) => (
+                    <Comment key={comment.id} comment={comment} />
+                  ))}
+                  <div className="card">
+                    {/* <div className="card-body"> */}
+                    {context.user && (
+                      <form
+                        className="card-footer py-3 border-0"
+                        // style={{ backgroundColor: "#f8f9fa" }}
+                        onSubmit={handleSubmit(onSubmit)}
+                      >
+                        <div className="d-flex flex-start w-100">
+                          <img
+                            className="rounded-circle shadow-1-strong me-3"
+                            src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp"
+                            alt="avatar"
+                            width="40"
+                            height="40"
+                          />
+                          <div className="form-outline w-100">
+                            <textarea
+                              className="form-control"
+                              id="textAreaExample"
+                              rows="4"
+                              style={{ background: "#fff" }}
+                              {...register("commentInput")}
+                            ></textarea>
+                            <label
+                              className="form-label"
+                              htmlFor="textAreaExample"
+                            >
+                              Write your comment
+                            </label>
+                          </div>
+                        </div>
+                        <div className="float-end mt-2 pt-1">
+                          <button
+                            type="submit"
+                            className="btn btn-primary btn-sm"
+                          >
+                            Post comment
+                          </button>
+                          {/* <button
+                          type="button"
+                          className="btn btn-outline-primary btn-sm"
+                        >
+                          Cancel
+                        </button> */}
+                        </div>
+                      </form>
+                    )}
+                    {/* </div> */}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </>
     )
   );
