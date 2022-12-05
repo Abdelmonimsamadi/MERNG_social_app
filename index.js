@@ -36,7 +36,7 @@ const start = async () => {
         await connectDB()
         app.use('/',
             graphqlUploadExpress(),
-            cors(),
+            cors({ origin: ["https://merng-apollo.netlify.app/", "http://localhost:4173"], credentials: true }),
             express.json(),
             expressMiddleware(server, {
                 context: ({ req }) => ({ req })
