@@ -8,7 +8,7 @@ fonctionalities:
 Live site https://merng-apollo.netlify.app/
 
 Home page(posts)
-![home](https://user-images.githubusercontent.com/56789235/202893559-59b61233-fef2-4183-b7ab-2615fb5be09f.PNG)
+![image](https://user-images.githubusercontent.com/56789235/205937458-98bf2324-9fbc-4c1d-bd8d-ecc2f3a39093.png)
 
 Single post page
 ![Single post page](https://user-images.githubusercontent.com/56789235/202893581-c2bb3840-d76e-44dd-8892-b22c76b3767b.PNG)
