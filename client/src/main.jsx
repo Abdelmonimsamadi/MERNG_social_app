@@ -5,7 +5,7 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  createHttpLink,
+  // createHttpLink,
   ApolloLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
@@ -17,9 +17,9 @@ const uri = import.meta.env.PROD
   ? "https://apollo-merng.herokuapp.com/"
   : "http://localhost:3001";
 
-const httpLink = createHttpLink({
-  uri,
-});
+// const httpLink = createHttpLink({
+//   uri,
+// });
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("jwtToken");
@@ -34,8 +34,15 @@ const authLink = setContext((_, { headers }) => {
 const link = ApolloLink.from([
   authLink,
   createUploadLink({
-    uri,
-    headers: { "Apollo-Require-Preflight": "true" },
+    uri: "https://apollo-merng.herokuapp.com/",
+    // uri,
+    headers: {
+      // "Access-Control-Allow-Origin": "*",
+      "Apollo-Require-Preflight": "true",
+    },
+    // fetchOptions: {
+    //   mode: "no-cors",
+    // },
   }),
   // httpLink,
 ]);
