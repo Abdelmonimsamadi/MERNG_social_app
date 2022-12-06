@@ -11,7 +11,7 @@ Home page(posts)
 ![image](https://user-images.githubusercontent.com/56789235/205937458-98bf2324-9fbc-4c1d-bd8d-ecc2f3a39093.png)
 
 Single post page
-![Single post page](https://user-images.githubusercontent.com/56789235/202893581-c2bb3840-d76e-44dd-8892-b22c76b3767b.PNG)
+![image](https://user-images.githubusercontent.com/56789235/205937722-d58d19a1-1208-4fcc-b667-d3fd8163885d.png)
 
 Register page
 ![Register page](https://user-images.githubusercontent.com/56789235/202893586-74bdabb4-c42b-49b3-972d-dcbe8e49703c.PNG)
